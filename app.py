@@ -1,7 +1,10 @@
+import pygame, random, time
+
 # Fitt's Law Project
 
 # Variables for generated circles
 # Distance - Size - Direction
+
 challenges = [[0,0,0] for i in range(0,32)]
 for i in range(0, 32):
     if i < 8:
@@ -13,7 +16,7 @@ for i in range(0, 32):
     elif i < 32:
         challenges[i][0] = 400
 
-sizes = [16, 32, 64, 128]
+sizes = [32, 64, 128, 256]
 for i in range(0, 32):
     challenges[i][1] = sizes[i % len(sizes)]
 
@@ -24,7 +27,56 @@ for i in range(0, 32):
         flipped = not flipped
         count = 0
 
-    challenges[i][2] = int(flipped)
+    if flipped:
+        challenges[i][2] = -1
+    else:
+        challenges[i][2] = 1
+    
     count += 1
 
 print(challenges)
+
+pygame.init()
+
+pygame.display.set_caption('Test')
+window_surface = pygame.display.set_mode((1920, 1080))
+screen_center = [960,540]
+
+background = pygame.Surface((1920, 1080))
+background.fill(pygame.Color('black'))
+
+permutation = challenges[random.randint(0, 31)]
+print((screen_center[0] + (permutation[0] * permutation[2]), (screen_center[1] - (permutation[1] // 2))), (permutation[1], permutation[1]))
+target = pygame.Rect((screen_center[0] + (permutation[0] * permutation[2]), (screen_center[1] - (permutation[1] // 2))), (permutation[1], permutation[1]))
+
+is_running = True
+
+while is_running:
+
+    clicked = False
+
+    for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            clicked = True
+
+        if event.type == pygame.QUIT:
+            is_running = False
+
+    window_surface.fill("black")
+    pygame.draw.rect(window_surface, 'white', target)
+
+    # flip() the display to put your work on screen
+    pygame.display.flip()
+
+    if clicked and target.collidepoint(pygame.mouse.get_pos()):
+        print("Target hit!")
+        permutation = challenges[random.randint(0, 31)]
+        print((screen_center[0] + (permutation[0] * permutation[2]), (screen_center[1] - (permutation[1] // 2))), (permutation[1], permutation[1]))
+        target = pygame.Rect((screen_center[0] + (permutation[0] * permutation[2]), (screen_center[1] - (permutation[1] // 2))), (permutation[1], permutation[1]))
+    
+    elif clicked and not target.collidepoint(pygame.mouse.get_pos()):
+        print("Missed!")
+
+    pygame.display.update()
+
+pygame.quit()
