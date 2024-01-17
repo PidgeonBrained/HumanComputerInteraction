@@ -67,7 +67,9 @@ permutation = challenges[random.randint(0, 31)]
 print((screen_center[0] + (permutation[0] * permutation[2]), (screen_center[1] - (permutation[1] // 2))), (permutation[1], permutation[1]))
 target = pygame.Rect((screen_center[0] + (permutation[0] * permutation[2]), (screen_center[1] - (permutation[1] // 2))), (permutation[1], permutation[1]))
 
-is_running = True
+font = pygame.font.Font('freesansbold.ttf', 64)
+
+is_running, trials = True, 300
 start_time, start_pos, misses = time.time(), pygame.mouse.get_pos(), 0
 
 while is_running:
@@ -84,6 +86,11 @@ while is_running:
     window_surface.fill("black")
     pygame.draw.rect(window_surface, 'white', target)
 
+    text = font.render(f'Trials: {trials}', True, 'white', 'black')
+    textRect = text.get_rect()
+    textRect.center = (960, 910)
+    window_surface.blit(text, textRect)
+
     # flip() the display to put your work on screen
     pygame.display.flip()
 
@@ -99,8 +106,12 @@ while is_running:
         print((screen_center[0] + (permutation[0] * permutation[2]), (screen_center[1] - (permutation[1] // 2))), (permutation[1], permutation[1]))
         target = pygame.Rect((screen_center[0] + (permutation[0] * permutation[2]), (screen_center[1] - (permutation[1] // 2))), (permutation[1], permutation[1]))
 
-        # Resetting variables
+        # Resetting/adjusting variables
         start_time, start_pos, misses = time.time(), pygame.mouse.get_pos(), 0
+        if trials <= 1:
+            is_running = False
+        else:
+            trials -= 1
     
     elif clicked and not target.collidepoint(pygame.mouse.get_pos()):
         print("Missed!")
