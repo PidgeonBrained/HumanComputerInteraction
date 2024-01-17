@@ -59,11 +59,12 @@ print((screen_center[0] + (permutation[0] * permutation[2]), (screen_center[1] -
 target = pygame.Rect((screen_center[0] + (permutation[0] * permutation[2]), (screen_center[1] - (permutation[1] // 2))), (permutation[1], permutation[1]))
 
 is_running = True
+start_time, start_pos, misses = time.time(), pygame.mouse.get_pos(), 0
+
 
 while is_running:
 
     clicked = False
-    start_time = time.time()
 
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -82,16 +83,20 @@ while is_running:
         print("Target hit!")
 
         # Log info
-        # TODO: Find total distance travelled per trial instance, error per trial
-        challenges_counter[permutation[3]].append((time.time() - start_time) * 1000)
+        # Time (milliseconds) - Distance (in pixels (x,y)) - Error (number of misses)
+        challenges_counter[permutation[3]].append((((time.time() - start_time) * 1000), (pygame.mouse.get_pos()[0] - start_pos[0], pygame.mouse.get_pos()[1] - start_pos[1]), misses))
 
         # Set up next square
         permutation = challenges[random.randint(0, 31)]
         print((screen_center[0] + (permutation[0] * permutation[2]), (screen_center[1] - (permutation[1] // 2))), (permutation[1], permutation[1]))
         target = pygame.Rect((screen_center[0] + (permutation[0] * permutation[2]), (screen_center[1] - (permutation[1] // 2))), (permutation[1], permutation[1]))
+
+        # Resetting variables
+        start_time, start_pos, misses = time.time(), pygame.mouse.get_pos(), 0
     
     elif clicked and not target.collidepoint(pygame.mouse.get_pos()):
         print("Missed!")
+        misses += 1
 
     pygame.display.update()
 
@@ -99,4 +104,4 @@ pygame.quit()
 
 # Display times
 for challenge in challenges_counter:
-    print(f"Permutation: {challenge}, Times: {challenges_counter[challenge]}")
+    print(f"Permutation: {challenge}, Stats: {challenges_counter[challenge]}")
