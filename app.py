@@ -3,10 +3,11 @@ import pygame, random, time
 # Fitt's Law Project
 
 # Variables for generated circles
-# Distance - Size - Direction
+# Distance - Size - Direction - ID
 
-challenges = [[0,0,0] for i in range(0,32)]
+challenges = [[0,0,0,0] for i in range(0,32)]
 for i in range(0, 32):
+    challenges[i][3] = i
     if i < 8:
         challenges[i][0] = 100
     elif i < 16:
@@ -36,6 +37,14 @@ for i in range(0, 32):
 
 print(challenges)
 
+# Counting times for each task trial for this user
+
+challenges_counter = {}
+for challenge in challenges:
+    challenges_counter[challenge[3]] = []
+
+# Starting game
+
 pygame.init()
 
 pygame.display.set_caption('Test')
@@ -54,6 +63,7 @@ is_running = True
 while is_running:
 
     clicked = False
+    start_time = time.time()
 
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -70,6 +80,12 @@ while is_running:
 
     if clicked and target.collidepoint(pygame.mouse.get_pos()):
         print("Target hit!")
+
+        # Log info
+        # TODO: Find total distance travelled per trial instance, error per trial
+        challenges_counter[permutation[3]].append((time.time() - start_time) * 1000)
+
+        # Set up next square
         permutation = challenges[random.randint(0, 31)]
         print((screen_center[0] + (permutation[0] * permutation[2]), (screen_center[1] - (permutation[1] // 2))), (permutation[1], permutation[1]))
         target = pygame.Rect((screen_center[0] + (permutation[0] * permutation[2]), (screen_center[1] - (permutation[1] // 2))), (permutation[1], permutation[1]))
@@ -80,3 +96,7 @@ while is_running:
     pygame.display.update()
 
 pygame.quit()
+
+# Display times
+for challenge in challenges_counter:
+    print(f"Permutation: {challenge}, Times: {challenges_counter[challenge]}")
