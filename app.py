@@ -1,8 +1,15 @@
-import pygame, random, time
+import pygame, random, time, csv
 
-# Fitt's Law Project
+"""
+Fitt's Law Project - CS 470 Spring 2024
+Team Woo Factor 2.0
+Pidge Witiak, Ahmed Tamer, Sam Baeyen, Cole Schoenbauer
+"""
 
-# Variables for generated circles
+# ------ Name this file differently for every subject tested!! ------
+csv_file = "subject1.csv"
+
+#  --------- Variables for generated circles ---------
 # Distance - Size - Direction - ID
 
 challenges = [[0,0,0,0] for i in range(0,32)]
@@ -36,14 +43,16 @@ for i in range(0, 32):
     count += 1
 
 print(challenges)
-
-# Counting times for each task trial for this user
+ 
+# --------- Counting times for each task trial for this user ---------
 
 challenges_counter = {}
 for challenge in challenges:
     challenges_counter[challenge[3]] = []
 
-# Starting game
+# --------- Starting game ---------
+
+# TODO: Add timer, disclaimer before game starts, practice round, visual indicators for hits and misses
 
 pygame.init()
 
@@ -60,7 +69,6 @@ target = pygame.Rect((screen_center[0] + (permutation[0] * permutation[2]), (scr
 
 is_running = True
 start_time, start_pos, misses = time.time(), pygame.mouse.get_pos(), 0
-
 
 while is_running:
 
@@ -102,6 +110,15 @@ while is_running:
 
 pygame.quit()
 
-# Display times
+#  --------- Display times ---------
 for challenge in challenges_counter:
     print(f"Permutation: {challenge}, Stats: {challenges_counter[challenge]}")
+
+#  --------- Record Data ---------
+
+with open(csv_file, "w", newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(["Permuatation", "Time to Complete", "Distance Moved", "Error"])
+    for challenge in challenges_counter:
+        for result in challenges_counter[challenge]:
+            writer.writerow([challenge, result[0], result[1], result[2]])
