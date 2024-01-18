@@ -69,7 +69,7 @@ target = pygame.Rect((screen_center[0] + (permutation[0] * permutation[2]), (scr
 
 font = pygame.font.Font('freesansbold.ttf', 64)
 
-is_running, trials = True, 300
+is_running, trials = True, 320
 start_time, start_pos, misses = time.time(), pygame.mouse.get_pos(), 0
 
 while is_running:
@@ -86,10 +86,17 @@ while is_running:
     window_surface.fill("black")
     pygame.draw.rect(window_surface, 'white', target)
 
+    # Counter text
     text = font.render(f'Trials: {trials}', True, 'white', 'black')
     textRect = text.get_rect()
     textRect.center = (960, 910)
     window_surface.blit(text, textRect)
+
+    # Quit button
+    button_text = font.render("Quit", True, 'black', 'white')
+    button_textRect = button_text.get_rect()
+    button_textRect.center = (960, 270)
+    window_surface.blit(button_text, button_textRect)
 
     # flip() the display to put your work on screen
     pygame.display.flip()
@@ -112,6 +119,9 @@ while is_running:
             is_running = False
         else:
             trials -= 1
+
+    elif clicked and button_textRect.collidepoint(pygame.mouse.get_pos()):
+        is_running = False
     
     elif clicked and not target.collidepoint(pygame.mouse.get_pos()):
         print("Missed!")
