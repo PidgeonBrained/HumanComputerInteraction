@@ -95,7 +95,7 @@ while is_running:
     # Quit button
     button_text = font.render("Quit", True, 'black', 'white')
     button_textRect = button_text.get_rect()
-    button_textRect.center = (960, 270)
+    button_textRect.bottomright = (1920, 1080)
     window_surface.blit(button_text, button_textRect)
 
     # flip() the display to put your work on screen
@@ -103,7 +103,7 @@ while is_running:
 
     if clicked and target.collidepoint(pygame.mouse.get_pos()):
         print("Target hit!")
-
+        pygame.mouse.set_pos(screen_center)
         # Log info
         # Time (milliseconds) - Distance (in pixels (x,y)) - Error (number of misses)
         challenges_counter[permutation[3]].append((((time.time() - start_time) * 1000), (pygame.mouse.get_pos()[0] - start_pos[0], pygame.mouse.get_pos()[1] - start_pos[1]), misses))
