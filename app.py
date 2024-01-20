@@ -32,7 +32,7 @@ def render_textrect(string, font, rect, text_color, background_color, justificat
     Failure - raises a TextRectException if the text won't fit onto the surface.
     """
 
-    import pygame
+    #import pygame
 
     final_lines = []
 
@@ -173,7 +173,6 @@ for i in range(0, 32):
     count += 1
 
 print(challenges)
-
 # --------- Counting times for each task trial for this user ---------
 
 challenges_counter = {}
@@ -185,7 +184,6 @@ for challenge in challenges:
 # TODO: Add timer, disclaimer before game starts, practice round, visual indicators for hits and misses
 
 pygame.init()
-
 
 pygame.display.set_caption('Test')
 window_surface = pygame.display.set_mode((1920, 1080))
@@ -200,7 +198,7 @@ target = pygame.Rect((screen_center[0] + (permutation[0] * permutation[2]), (scr
 
 font = pygame.font.Font('freesansbold.ttf', 64)
 
-is_running, trials = True, 300
+is_running, trials = True, 320
 start_time, start_pos, misses = time.time(), pygame.mouse.get_pos(), 0
 
 while is_running:
@@ -217,6 +215,7 @@ while is_running:
     window_surface.fill("black")
     pygame.draw.rect(window_surface, 'white', target)
 
+    # Counter text
     text = font.render(f'Trials: {trials}', True, 'white', 'black')
     textRect = text.get_rect()
     textRect.center = (960, 910)
@@ -227,7 +226,7 @@ while is_running:
 
     if clicked and target.collidepoint(pygame.mouse.get_pos()):
         print("Target hit!")
-
+        pygame.mouse.set_pos(screen_center)
         # Log info
         # Time (milliseconds) - Distance (in pixels (x,y)) - Error (number of misses)
         challenges_counter[permutation[3]].append((((time.time() - start_time) * 1000), (pygame.mouse.get_pos()[0] - start_pos[0], pygame.mouse.get_pos()[1] - start_pos[1]), misses))
