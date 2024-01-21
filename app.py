@@ -7,7 +7,6 @@ Pidge Witiak, Ahmed Tamer, Sam Baeyen, Cole Schoenbauer
 """
 
 # ------ Name this file differently for every subject tested!! ------
-csv_file = "subject1.csv"
 
 #  --------- Variables for generated circles ---------
 # Distance - Size - Direction - ID
@@ -70,7 +69,6 @@ target = pygame.Rect((screen_center[0] + (permutation[0] * permutation[2]), (scr
 font = pygame.font.Font('freesansbold.ttf', 64)
 
 is_running, trials = True, 320
-start_time, start_pos, misses = time.time(), pygame.mouse.get_pos(), 0
 
 while is_running:
 
@@ -80,7 +78,6 @@ while is_running:
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             clicked = True
 
-        if event.type == pygame.QUIT:
             is_running = False
 
     window_surface.fill("black")
@@ -96,17 +93,18 @@ while is_running:
     button_text = font.render("Quit", True, 'black', 'white')
     button_textRect = button_text.get_rect()
     button_textRect.bottomright = (1920, 1080)
+    button_textRect.center = (960, 270)
     window_surface.blit(button_text, button_textRect)
 
     # flip() the display to put your work on screen
     pygame.display.flip()
 
     if clicked and target.collidepoint(pygame.mouse.get_pos()):
-        print("Target hit!")
         pygame.mouse.set_pos(screen_center)
+        print("Target hit!")
+
         # Log info
         # Time (milliseconds) - Distance (in pixels (x,y)) - Error (number of misses)
-        challenges_counter[permutation[3]].append((((time.time() - start_time) * 1000), (pygame.mouse.get_pos()[0] - start_pos[0], pygame.mouse.get_pos()[1] - start_pos[1]), misses))
 
         # Set up next square
         permutation = challenges[random.randint(0, 31)]
@@ -114,7 +112,6 @@ while is_running:
         target = pygame.Rect((screen_center[0] + (permutation[0] * permutation[2]), (screen_center[1] - (permutation[1] // 2))), (permutation[1], permutation[1]))
 
         # Resetting/adjusting variables
-        start_time, start_pos, misses = time.time(), pygame.mouse.get_pos(), 0
         if trials <= 1:
             is_running = False
         else:
