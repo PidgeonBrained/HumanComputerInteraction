@@ -7,6 +7,7 @@ Pidge Witiak, Ahmed Tamer, Sam Baeyen, Cole Schoenbauer
 """
 
 # ------ Name this file differently for every subject tested!! ------
+csv_file = "subject3date1-21-2014.csv"
 
 #  --------- Variables for generated circles ---------
 # Distance - Size - Direction - ID
@@ -69,6 +70,8 @@ target = pygame.Rect((screen_center[0] + (permutation[0] * permutation[2]), (scr
 font = pygame.font.Font('freesansbold.ttf', 64)
 
 is_running, trials = True, 320
+start_time, start_pos, misses = time.time(), screen_center, 0
+clicked_pos = None
 
 while is_running:
 
@@ -77,7 +80,9 @@ while is_running:
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             clicked = True
+            clicked_pos = pygame.mouse.get_pos()
 
+        if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
             is_running = False
 
     window_surface.fill("black")
@@ -92,7 +97,6 @@ while is_running:
     # Quit button
     button_text = font.render("Quit", True, 'black', 'white')
     button_textRect = button_text.get_rect()
-    button_textRect.bottomright = (1920, 1080)
     button_textRect.center = (960, 270)
     window_surface.blit(button_text, button_textRect)
 
@@ -105,6 +109,7 @@ while is_running:
 
         # Log info
         # Time (milliseconds) - Distance (in pixels (x,y)) - Error (number of misses)
+        challenges_counter[permutation[3]].append((((time.time() - start_time) * 1000), (clicked_pos[0] - start_pos[0], clicked_pos[1] - start_pos[1]), misses))
 
         # Set up next square
         permutation = challenges[random.randint(0, 31)]
@@ -112,6 +117,7 @@ while is_running:
         target = pygame.Rect((screen_center[0] + (permutation[0] * permutation[2]), (screen_center[1] - (permutation[1] // 2))), (permutation[1], permutation[1]))
 
         # Resetting/adjusting variables
+        start_time, start_pos, misses = time.time(), screen_center, 0
         if trials <= 1:
             is_running = False
         else:
