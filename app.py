@@ -200,6 +200,7 @@ font = pygame.font.Font('freesansbold.ttf', 64)
 
 is_running, trials = True, 320
 start_time, start_pos, misses = time.time(), pygame.mouse.get_pos(), 0
+clicked_pos = None
 
 while is_running:
 
@@ -208,6 +209,7 @@ while is_running:
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             clicked = True
+            clicked_pos = pygame.mouse.get_pos()
 
         if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
             is_running = False
@@ -229,7 +231,7 @@ while is_running:
         pygame.mouse.set_pos(screen_center)
         # Log info
         # Time (milliseconds) - Distance (in pixels (x,y)) - Error (number of misses)
-        challenges_counter[permutation[3]].append((((time.time() - start_time) * 1000), (pygame.mouse.get_pos()[0] - start_pos[0], pygame.mouse.get_pos()[1] - start_pos[1]), misses))
+        challenges_counter[permutation[3]].append((((time.time() - start_time) * 1000), (clicked_pos[0] - start_pos[0], clicked_pos[1] - start_pos[1]), misses))
 
         # Set up next square
         permutation = challenges[random.randint(0, 31)]
