@@ -186,7 +186,8 @@ def consolidate_data(data):
         outputData[permNum].append(mean)
 
         #Calculating ID
-        ID = math.ceil(math.log2((outputData[permNum][0]/outputData[permNum][1]) + 1)) 
+        #ID = math.ceil(math.log2((outputData[permNum][0]/outputData[permNum][1]) + 1)) 
+        ID = math.log2((outputData[permNum][0]/outputData[permNum][1]) + 1)
         outputData[permNum].append(ID)
 
         IP = round(ID/(mean/1000), 1)
